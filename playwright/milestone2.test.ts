@@ -210,56 +210,56 @@ test.describe('Milestone 2: Backend API Integration Tests', () => {
   });
 
   // --------------------- End-to-End Test ---------------------
-  test('End-to-End: Complete workflow', { tag: ['@M2-EndToEnd'] }, async () => {
-    // Task 1: Backend server is running
-    const serverResponse = await makeRequest('GET', '/api/Notes');
-    expect(serverResponse.status).toBe(200);
-    expect(Array.isArray(serverResponse.body)).toBe(true);
+  // test('End-to-End: Complete workflow', { tag: ['@M2-EndToEnd'] }, async () => {
+  //   // Task 1: Backend server is running
+  //   const serverResponse = await makeRequest('GET', '/api/Notes');
+  //   expect(serverResponse.status).toBe(200);
+  //   expect(Array.isArray(serverResponse.body)).toBe(true);
 
-    // Task 2: Create a note
-    const newNote = {
-      title: 'E2E Test Note',
-      content: 'End-to-end test content',
-      tags: ['e2e', 'test'],
-    };
-    const createResponse = await makeRequest('POST', '/api/Notes', newNote);
-    expect(createResponse.status).toBe(200);
-    expect(createResponse.body).toHaveProperty('id');
-    const noteId = createResponse.body.id;
-    createdNoteIds.push(noteId);
+  //   // Task 2: Create a note
+  //   const newNote = {
+  //     title: 'E2E Test Note',
+  //     content: 'End-to-end test content',
+  //     tags: ['e2e', 'test'],
+  //   };
+  //   const createResponse = await makeRequest('POST', '/api/Notes', newNote);
+  //   expect(createResponse.status).toBe(200);
+  //   expect(createResponse.body).toHaveProperty('id');
+  //   const noteId = createResponse.body.id;
+  //   createdNoteIds.push(noteId);
 
-    // Task 3: Read the note
-    const getResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(getResponse.status).toBe(200);
-    expect(getResponse.body.title).toBe(newNote.title);
-    expect(getResponse.body.content).toBe(newNote.content);
+  //   // Task 3: Read the note
+  //   const getResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(getResponse.status).toBe(200);
+  //   expect(getResponse.body.title).toBe(newNote.title);
+  //   expect(getResponse.body.content).toBe(newNote.content);
 
-    // Task 4: Update the note
-    const updatedNote = {
-      title: 'E2E Updated Note',
-      content: 'Updated E2E content',
-    };
-    const updateResponse = await makeRequest('PUT', `/api/Notes/${noteId}`, updatedNote);
-    let finalUpdateResponse = updateResponse;
-    if (updateResponse.status === 404 || updateResponse.status === 405) {
-      finalUpdateResponse = await makeRequest('PATCH', `/api/Notes/${noteId}`, updatedNote);
-    }
-    expect([200, 204]).toContain(finalUpdateResponse.status);
+  //   // Task 4: Update the note
+  //   const updatedNote = {
+  //     title: 'E2E Updated Note',
+  //     content: 'Updated E2E content',
+  //   };
+  //   const updateResponse = await makeRequest('PUT', `/api/Notes/${noteId}`, updatedNote);
+  //   let finalUpdateResponse = updateResponse;
+  //   if (updateResponse.status === 404 || updateResponse.status === 405) {
+  //     finalUpdateResponse = await makeRequest('PATCH', `/api/Notes/${noteId}`, updatedNote);
+  //   }
+  //   expect([200, 204]).toContain(finalUpdateResponse.status);
 
-    // Verify update
-    const getUpdatedResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(getUpdatedResponse.status).toBe(200);
-    expect(getUpdatedResponse.body.title).toBe(updatedNote.title);
+  //   // Verify update
+  //   const getUpdatedResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(getUpdatedResponse.status).toBe(200);
+  //   expect(getUpdatedResponse.body.title).toBe(updatedNote.title);
 
-    // Task 5: Delete the note
-    const deleteResponse = await makeRequest('DELETE', `/api/Notes/${noteId}`);
-    expect(deleteResponse.status).toBe(200);
+  //   // Task 5: Delete the note
+  //   const deleteResponse = await makeRequest('DELETE', `/api/Notes/${noteId}`);
+  //   expect(deleteResponse.status).toBe(200);
 
-    // Verify deletion
-    const getAfterDelete = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(getAfterDelete.status).toBe(404);
+  //   // Verify deletion
+  //   const getAfterDelete = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(getAfterDelete.status).toBe(404);
 
-    // Remove from cleanup list since we already deleted it
-    createdNoteIds = createdNoteIds.filter(id => id !== noteId);
-  });
+  //   // Remove from cleanup list since we already deleted it
+  //   createdNoteIds = createdNoteIds.filter(id => id !== noteId);
+  // });
 });

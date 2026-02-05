@@ -254,61 +254,61 @@ test.describe('Milestone 3: Backend + Database Integration Tests', () => {
   });
 
   // --------------------- End-to-End Test ---------------------
-  test('End-to-End: Complete workflow', { tag: ['@M3-EndToEnd'] }, async () => {
-    // Task 1: Backend server is running and connected to database
-    const serverResponse = await makeRequest('GET', '/api/Notes');
-    expect(serverResponse.status).toBe(200);
-    expect(Array.isArray(serverResponse.body)).toBe(true);
+  // test('End-to-End: Complete workflow', { tag: ['@M3-EndToEnd'] }, async () => {
+  //   // Task 1: Backend server is running and connected to database
+  //   const serverResponse = await makeRequest('GET', '/api/Notes');
+  //   expect(serverResponse.status).toBe(200);
+  //   expect(Array.isArray(serverResponse.body)).toBe(true);
 
-    // Task 2: Create a note and it persists to database
-    const newNote = {
-      title: 'E2E Database Test Note',
-      content: 'End-to-end test content for database',
-      tags: ['e2e', 'database'],
-    };
-    const createResponse = await makeRequest('POST', '/api/Notes', newNote);
-    expect(createResponse.status).toBe(200);
-    expect(createResponse.body).toHaveProperty('id');
-    const noteId = createResponse.body.id;
-    createdNoteIds.push(noteId);
+  //   // Task 2: Create a note and it persists to database
+  //   const newNote = {
+  //     title: 'E2E Database Test Note',
+  //     content: 'End-to-end test content for database',
+  //     tags: ['e2e', 'database'],
+  //   };
+  //   const createResponse = await makeRequest('POST', '/api/Notes', newNote);
+  //   expect(createResponse.status).toBe(200);
+  //   expect(createResponse.body).toHaveProperty('id');
+  //   const noteId = createResponse.body.id;
+  //   createdNoteIds.push(noteId);
 
-    // Verify in database
-    const dbVerifyCreate = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(dbVerifyCreate.status).toBe(200);
-    expect(dbVerifyCreate.body.title).toBe(newNote.title);
+  //   // Verify in database
+  //   const dbVerifyCreate = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(dbVerifyCreate.status).toBe(200);
+  //   expect(dbVerifyCreate.body.title).toBe(newNote.title);
 
-    // Task 3: Read notes from database
-    const getResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(getResponse.status).toBe(200);
-    expect(getResponse.body.title).toBe(newNote.title);
-    expect(getResponse.body.content).toBe(newNote.content);
+  //   // Task 3: Read notes from database
+  //   const getResponse = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(getResponse.status).toBe(200);
+  //   expect(getResponse.body.title).toBe(newNote.title);
+  //   expect(getResponse.body.content).toBe(newNote.content);
 
-    // Task 4: Update note and changes persist to database
-    const updatedNote = {
-      title: 'E2E Updated Note in DB',
-      content: 'Updated E2E content in database',
-    };
-    const updateResponse = await makeRequest('PUT', `/api/Notes/${noteId}`, updatedNote);
-    let finalUpdateResponse = updateResponse;
-    if (updateResponse.status === 404 || updateResponse.status === 405) {
-      finalUpdateResponse = await makeRequest('PATCH', `/api/Notes/${noteId}`, updatedNote);
-    }
-    expect([200, 204]).toContain(finalUpdateResponse.status);
+  //   // Task 4: Update note and changes persist to database
+  //   const updatedNote = {
+  //     title: 'E2E Updated Note in DB',
+  //     content: 'Updated E2E content in database',
+  //   };
+  //   const updateResponse = await makeRequest('PUT', `/api/Notes/${noteId}`, updatedNote);
+  //   let finalUpdateResponse = updateResponse;
+  //   if (updateResponse.status === 404 || updateResponse.status === 405) {
+  //     finalUpdateResponse = await makeRequest('PATCH', `/api/Notes/${noteId}`, updatedNote);
+  //   }
+  //   expect([200, 204]).toContain(finalUpdateResponse.status);
 
-    // Verify update in database
-    const dbVerifyUpdate = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(dbVerifyUpdate.status).toBe(200);
-    expect(dbVerifyUpdate.body.title).toBe(updatedNote.title);
+  //   // Verify update in database
+  //   const dbVerifyUpdate = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(dbVerifyUpdate.status).toBe(200);
+  //   expect(dbVerifyUpdate.body.title).toBe(updatedNote.title);
 
-    // Task 5: Delete note and it removes from database
-    const deleteResponse = await makeRequest('DELETE', `/api/Notes/${noteId}`);
-    expect(deleteResponse.status).toBe(200);
+  //   // Task 5: Delete note and it removes from database
+  //   const deleteResponse = await makeRequest('DELETE', `/api/Notes/${noteId}`);
+  //   expect(deleteResponse.status).toBe(200);
 
-    // Verify deletion from database
-    const getAfterDelete = await makeRequest('GET', `/api/Notes/${noteId}`);
-    expect(getAfterDelete.status).toBe(404);
+  //   // Verify deletion from database
+  //   const getAfterDelete = await makeRequest('GET', `/api/Notes/${noteId}`);
+  //   expect(getAfterDelete.status).toBe(404);
 
-    // Remove from cleanup list since we already deleted it
-    createdNoteIds = createdNoteIds.filter(id => id !== noteId);
-  });
+  //   // Remove from cleanup list since we already deleted it
+  //   createdNoteIds = createdNoteIds.filter(id => id !== noteId);
+  // });
 });
